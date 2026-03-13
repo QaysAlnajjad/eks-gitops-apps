@@ -1,4 +1,4 @@
-clusterName: eks-observability-cluster
+clusterName: eks-cluster
 
 serviceAccount:
   create: false
