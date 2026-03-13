@@ -1,0 +1,9 @@
+clusterName: eks-observability-cluster
+
+serviceAccount:
+  create: false
+  name: aws-load-balancer-controller
+
+region: eu-central-1
+
+vpcId: <YOUR_VPC_ID>
