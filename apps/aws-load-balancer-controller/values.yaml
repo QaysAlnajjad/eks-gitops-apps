@@ -4,6 +4,6 @@ serviceAccount:
   create: false
   name: aws-load-balancer-controller
 
-region: eu-central-1
+region: us-east-1
 
-vpcId: <YOUR_VPC_ID>
+vpcId: vpc-0afff95418ed17611
