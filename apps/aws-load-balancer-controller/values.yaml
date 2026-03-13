@@ -3,6 +3,8 @@ clusterName: eks-cluster
 serviceAccount:
   create: false
   name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::127214183643:role/eks-alb-controller-role
 
 region: us-east-1
 
