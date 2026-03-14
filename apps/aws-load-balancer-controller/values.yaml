@@ -1,7 +1,7 @@
 clusterName: eks-cluster
 
 serviceAccount:
-  create: false
+  create: true
   name: aws-load-balancer-controller
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::127214183643:role/eks-alb-controller-role
