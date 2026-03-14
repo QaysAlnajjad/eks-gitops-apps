@@ -5,3 +5,4 @@ resources:
   - aws-load-balancer-controller/app.yaml
   - monitoring/app.yaml
   - sample-app/app.yaml
+  - flask-app/app.yaml
