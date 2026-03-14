@@ -13,8 +13,7 @@ spec:
       chart: kube-prometheus-stack
       targetRevision: 69.4.1
       helm:
-        valueFiles:
-          - $values/apps/monitoring/values.yaml
+        skipCrds: false
     - repoURL: https://github.com/QaysAlnajjad/eks-gitops-apps.git
       targetRevision: main
       ref: values
