@@ -12,9 +12,6 @@ rbac:
 prometheus:
   enabled: true
 
-  rbac:
-    create: true
-
   prometheusSpec:
     replicas: 1
     retention: 12h
