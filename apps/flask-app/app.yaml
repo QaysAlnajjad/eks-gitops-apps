@@ -11,7 +11,7 @@ spec:
     path: apps/flask-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: demo
+    namespace: prod
   syncPolicy:
     automated:
       prune: true
