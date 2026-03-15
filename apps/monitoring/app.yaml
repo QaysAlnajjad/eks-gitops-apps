@@ -14,6 +14,8 @@ spec:
       targetRevision: 69.4.1
       helm:
         skipCrds: true
+        valueFiles:
+          - $values/apps/monitoring/values.yaml
     - repoURL: https://github.com/QaysAlnajjad/eks-gitops-apps.git
       targetRevision: main
       ref: values
