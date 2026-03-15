@@ -15,8 +15,7 @@ prometheus:
   prometheusSpec:
     replicas: 1
     retention: 12h
-    storageSpec:
-      emptyDir: {}
+
     serviceMonitorSelectorNilUsesHelmValues: true
     podMonitorSelectorNilUsesHelmValues: true
 
