@@ -27,9 +27,6 @@ eks-gitops-apps/
 │   ├── monitoring/
 │   ├── sample-app/
 │   └── kustomization.yaml
-├── bootstrap/
-│   ├── alb-controller-serviceaccount.yaml
-│   └── aws-auth.yaml
 ├── monitoring/
 │   ├── alerts/
 │   ├── dashboards/
