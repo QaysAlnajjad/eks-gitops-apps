@@ -5,6 +5,7 @@ metadata:
   namespace: prod
   labels:
     app: flask
+    component: monitoring
 spec:
   type: ClusterIP
   selector:
