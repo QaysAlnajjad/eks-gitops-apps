@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: flask
-      component: monitoring
+      component: metrics
   namespaceSelector:
     matchNames:
       - prod
