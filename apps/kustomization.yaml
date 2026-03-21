@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - aws-load-balancer-controller/app.yaml
-  - monitoring/app.yaml
   - sample-app/app.yaml
   - flask-app/app.yaml
+  - monitoring-chart/app.yaml
+  - monitoring-resources/app.yaml
