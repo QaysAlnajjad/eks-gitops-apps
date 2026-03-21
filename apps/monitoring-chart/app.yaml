@@ -15,7 +15,7 @@ spec:
       helm:
         skipCrds: true
         valueFiles:
-          - $values/apps/monitoring/values.yaml
+          - $values/apps/monitoring-chart/values.yaml
     - repoURL: https://github.com/QaysAlnajjad/eks-gitops-apps.git
       targetRevision: main
       ref: values
