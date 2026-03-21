@@ -21,3 +21,5 @@ spec:
     - name: telegram-receiver
       webhookConfigs:
         - url: http://telegram-webhook.monitoring.svc:8080/alerts
+
+    - name: default-receiver
