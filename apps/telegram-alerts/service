@@ -34,7 +34,7 @@ def alerts():
 
     text = "\n\n".join(messages) if messages else "Received alert with no details."
 
-    telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    telegram_url = f"https://api.telegram.org/bot8685948220:AAHcUUBR8Cn9pznDKhsIYN0k8PM3g9VCwjE/sendMessage"
     resp = requests.post(
         telegram_url,
         json={
