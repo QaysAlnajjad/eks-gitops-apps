@@ -7,7 +7,7 @@ metadata:
     release: monitoring
 spec:
   route:
-    receiver: default-receiver
+    receiver: telegram-receiver
     groupBy: ["alertname", "namespace"]
     groupWait: 30s
     groupInterval: 5m
