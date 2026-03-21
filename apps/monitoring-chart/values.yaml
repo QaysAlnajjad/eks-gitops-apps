@@ -29,6 +29,8 @@ alertmanager:
     create: true
 
   alertmanagerSpec:
+    alertmanagerConfigMatcherStrategy:
+      type: None
     replicas: 1
     
   config:
