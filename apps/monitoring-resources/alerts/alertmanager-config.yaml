@@ -14,6 +14,6 @@ spec:
     repeatInterval: 4h
 
   receivers:
-    - name: default-receiver
+    - name: telegram-receiver
       webhookConfigs:
-        - url: http://example-webhook.monitoring.svc:8080/alerts
+        - url: http://telegram-webhook.monitoring.svc:8080/alerts
