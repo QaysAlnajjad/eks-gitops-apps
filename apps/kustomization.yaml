@@ -7,3 +7,4 @@ resources:
   - flask-app/app.yaml
   - monitoring-chart/app.yaml
   - monitoring-resources/app.yaml
+  - telegram-alerts/app.yaml
