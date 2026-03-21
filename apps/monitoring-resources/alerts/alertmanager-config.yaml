@@ -7,17 +7,11 @@ metadata:
     release: monitoring
 spec:
   route:
-    receiver: default-receiver
+    receiver: telegram-receiver
     groupBy: ["alertname", "namespace"]
     groupWait: 30s
     groupInterval: 5m
     repeatInterval: 4h
-    routes:
-      - receiver: telegram-receiver
-        matchers:
-          - name: namespace
-            value: monitoring
-            matchType: =
 
 
   receivers:
@@ -25,4 +19,3 @@ spec:
       webhookConfigs:
         - url: http://telegram-webhook.monitoring.svc:8080/alerts
 
-    - name: default-receiver
