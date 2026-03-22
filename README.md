@@ -39,38 +39,68 @@ This repository is intentionally separate from the Terraform repository so infra
 eks-gitops-apps/
 ├── apps/
 │   ├── aws-load-balancer-controller/
+│   │   ├── app.yaml
+│   │   └── values.yaml
 │   ├── flask-app/
-│   ├── monitoring/
+│   │   ├── app.yaml
+│   │   ├── deployment.yaml
+│   │   ├── ingress.yaml
+│   │   ├── metrics-service.yaml
+│   │   └── service.yaml
+│   ├── monitoring-chart/
+│   │   ├── app.yaml
+│   │   └── values.yaml
+│   ├── monitoring-resources/
+│   │   ├── servicemonitors/
+│   │   ├── alerts/
+|   |   |   ├── alertmanager-config.yaml
+|   |   |   └── app-alerts.yaml
+│   │   ├── dashboards/
+|   |   |   └── flask-dashboard.json
+|   |   ├── servicemonitors/
+|   |   |   └── flask.yaml
+|   |   ├── app.yaml
+│   │   └── kustomization.yaml
 │   ├── sample-app/
+│   │   ├── app.yaml
+│   │   ├── deployment.yaml
+│   │   ├── hpa.yaml
+│   │   ├── ingress.yaml
+│   │   ├── namespace.yaml
+│   │   └── service.yaml
+│   ├── telegram-alerts/
+│   │   ├── app.yaml
+│   │   ├── deployment.yaml
+│   │   ├── kustomization.yaml
+│   │   ├── secret.yaml
+│   │   └── service.yaml
 │   └── kustomization.yaml
-├── monitoring/
-│   ├── alerts/
-│   ├── dashboards/
-│   ├── servicemonitors/
-│   ├── README.md
-│   └── namespace.yaml
-└── rbac/
-    ├── app-role.yaml
-    ├── monitoring-cluster-role.yaml
-    ├── monitoring-helm-role.yaml
-    └── rolebinding.yaml
+└── README.md
 ```
 
 ---
 
-## GitOps model
+## GitOps Model
 
-This repository is intended to be watched by ArgoCD.
+The root application created from eks-infrastructure points ArgoCD to apps/.
+
+ArgoCD then reconciles the application layer by reading apps/kustomization.yaml, which aggregates:
+
+  * aws-load-balancer-controller/app.yaml
+  * sample-app/app.yaml
+  * flask-app/app.yaml
+  * monitoring-chart/app.yaml
+  * monitoring-resources/app.yaml
+  * telegram-alerts/app.yaml
+
+This means changes are applied through Git commits, not by manually patching the cluster.
 
 Workflow:
 
-1. Change manifests in Git
-
-2. Push to repository
-
-3. ArgoCD detects drift
-
-4. ArgoCD syncs the cluster to the desired state
+  1. Change manifests in Git
+  2. Push to repository
+  3. ArgoCD detects drift
+  4. ArgoCD syncs the cluster to the desired state
 
 This keeps deployments declarative, traceable, and auditable.
 
@@ -246,60 +276,6 @@ Qays Alnajjad
 
 
 
-
-
-## Repository Structure
-
-```text
-eks-gitops-apps/
-├── apps/
-│   ├── aws-load-balancer-controller/
-│   │   ├── app.yaml
-│   │   └── values.yaml
-│   ├── flask-app/
-│   │   ├── app.yaml
-│   │   ├── deployment.yaml
-│   │   ├── ingress.yaml
-│   │   ├── metrics-service.yaml
-│   │   └── service.yaml
-│   ├── monitoring-chart/
-│   │   ├── app.yaml
-│   │   └── values.yaml
-│   ├── monitoring-resources/
-│   │   ├── app.yaml
-│   │   ├── alerts/
-│   │   ├── dashboards/
-│   │   └── servicemonitors/
-│   ├── sample-app/
-│   │   ├── app.yaml
-│   │   ├── deployment.yaml
-│   │   ├── hpa.yaml
-│   │   ├── ingress.yaml
-│   │   ├── namespace.yaml
-│   │   └── service.yaml
-│   ├── telegram-alerts/
-│   │   ├── app.yaml
-│   │   ├── deployment.yaml
-│   │   ├── kustomization.yaml
-│   │   ├── secret.yaml
-│   │   └── service.yaml
-│   └── kustomization.yaml
-└── README.md
-GitOps Model
-
-The root application created from eks-infrastructure points ArgoCD to apps/.
-
-ArgoCD then reconciles the application layer by reading apps/kustomization.yaml, which aggregates:
-	•	aws-load-balancer-controller/app.yaml
-	•	sample-app/app.yaml
-	•	flask-app/app.yaml
-	•	monitoring-chart/app.yaml
-	•	monitoring-resources/app.yaml
-	•	telegram-alerts/app.yaml
-
-This means changes are applied through Git commits, not by manually patching the cluster.
-
-⸻
 
 Application Layout
 
