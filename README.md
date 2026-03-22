@@ -120,7 +120,7 @@ This application is deployed through ArgoCD from the external AWS EKS Helm chart
   * region
   * VPC ID
 
-⸻
+---
 
 ### 2. Sample App
 
@@ -136,7 +136,7 @@ A demo workload used as a simple application target, with:
 
 This gives a separate example application distinct from the Flask application.
 
-⸻
+---
 
 ### 3. Flask App
 
@@ -152,7 +152,7 @@ The Flask application is deployed from manifests stored in this repository. The 
 
 This separation allows user HTTP traffic and Prometheus metrics scraping to be handled independently.
 
-⸻
+---
 
 ### 4. Monitoring Chart
 
@@ -166,7 +166,7 @@ The chart values are stored locally in:
 
 This is the base monitoring platform layer.
 
-⸻
+---
 
 ### 5. Monitoring Resources
 
@@ -184,7 +184,7 @@ This split is intentional:
   *	monitoring-chart installs the platform
   *	monitoring-resources customizes what that platform monitors and how it alerts
 
-⸻
+---
 
 ### 6. Telegram Alerts
 
@@ -193,13 +193,88 @@ apps/telegram-alerts/
 This application deploys the webhook service that receives Alertmanager webhooks and forwards them to Telegram.
 
 It is managed as its own ArgoCD application and includes:
-	•	deployment
-	•	service
-	•	secret
-	•	local kustomization
+
+  *	deployment
+  *	service
+  *	secret
+  *	local kustomization
 
 This makes the alert delivery path explicit and independently deployable.
 
+---
+
+## Monitoring Architecture
+
+The monitoring flow in this repository is:
+
+Flask metrics endpoint
+  -> ServiceMonitor
+  -> Prometheus
+  -> PrometheusRule
+  -> Alertmanager
+  -> telegram-alerts webhook
+  -> Telegram
+
+This design separates:
+
+  *	platform installation
+  *	monitoring configuration
+  *	notification delivery
+
+into clear GitOps-managed components.
+
+---
+
+## Why the Monitoring Split Matters
+
+The repository uses two monitoring-related applications for a reason:
+
+### monitoring-chart
+
+Owns installation of the Prometheus / Alertmanager / Grafana stack itself.
+
+### monitoring-resources
+
+Owns project-specific monitoring objects such as:
+
+  *	alert rules
+  *	service discovery
+  *	dashboards
+  *	Alertmanager routing config
+
+This keeps the Helm chart clean while preserving flexibility for project-specific observability resources.
+
+---
+
+## Deployment Flow
+
+  1. eks-infrastructure creates the cluster and installs ArgoCD
+  2. bootstrap/root-app.yaml points ArgoCD to this repository
+  3. ArgoCD reads apps/kustomization.yaml
+  4. Each application in apps/ is reconciled into the cluster
+  5. Ongoing changes are delivered by commit + sync
+
+---
+
+## Operating Model
+
+Make changes by editing Git manifests, then push.
+
+Typical workflow:
+
+git add .
+git commit -m "update application manifests"
+git push
+
+ArgoCD will detect drift and reconcile the cluster to match this repository.
+
+---
+
+## Notes
+
+  *	This repository should remain the single source of truth for in-cluster desired state
+  *	Avoid manual kubectl edit changes unless debugging temporarily
+  *	Permanent changes should always be committed back to Git
 
 ---
 
@@ -221,200 +296,9 @@ In short:
 
 ---
 
-## Observability in this repository
-
-The monitoring model is split across two places:
-
-  * apps/monitoring/ for the ArgoCD application definition and stack deployment
-
-  * monitoring/ for supporting monitoring resources such as ServiceMonitors, alerts, and dashboards
-
-This separation makes it easier to distinguish between:
-
-  * deployment of the monitoring stack itself
-
-  * monitoring content applied on top of that stack
-
----
-
-## Example managed capabilities
-
-Depending on the manifests currently enabled, this repository can manage:
-
-  * Prometheus stack deployment
-
-  * Alertmanager configuration
-
-  * Grafana dashboards
-
-  * ServiceMonitor resources for application metrics
-
-  * application ingress and service definitions
-
-  * ALB integration for workloads
-
----
-
-## Operating model
-
-Typical process:
-
-### Update an application
-
-Edit manifests under the relevant app directory, then push changes.
-
-### Update monitoring resources
-
-Edit files under monitoring/alerts, monitoring/dashboards, or monitoring/servicemonitors, then let ArgoCD sync them.
-
-### Update access / permissions
-
-Modify manifests under rbac/.
-
----
-
-## Notes
-
-This repository is the desired-state source for in-cluster resources.
-
-Avoid making long-lived manual changes directly in the cluster.
-
-If a resource is managed by ArgoCD, the Git state should be treated as authoritative.
-
----
-
 ## Author
 
 Qays Alnajjad
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-⸻
-
-Monitoring Architecture
-
-The monitoring flow in this repository is:
-
-Flask metrics endpoint
-  -> ServiceMonitor
-  -> Prometheus
-  -> PrometheusRule
-  -> Alertmanager
-  -> telegram-alerts webhook
-  -> Telegram
-
-This design separates:
-	•	platform installation
-	•	monitoring configuration
-	•	notification delivery
-
-into clear GitOps-managed components.
-
-⸻
-
-Why the Monitoring Split Matters
-
-The repository uses two monitoring-related applications for a reason:
-
-monitoring-chart
-
-Owns installation of the Prometheus / Alertmanager / Grafana stack itself.
-
-monitoring-resources
-
-Owns project-specific monitoring objects such as:
-	•	alert rules
-	•	service discovery
-	•	dashboards
-	•	Alertmanager routing config
-
-This keeps the Helm chart clean while preserving flexibility for project-specific observability resources.
-
-⸻
-
-Deployment Flow
-	1.	eks-infrastructure creates the cluster and installs ArgoCD
-	2.	bootstrap/root-app.yaml points ArgoCD to this repository
-	3.	ArgoCD reads apps/kustomization.yaml
-	4.	Each application in apps/ is reconciled into the cluster
-	5.	Ongoing changes are delivered by commit + sync
-
-⸻
-
-Operating Model
-
-Make changes by editing Git manifests, then push.
-
-Typical workflow:
-
-git add .
-git commit -m "update application manifests"
-git push
-
-ArgoCD will detect drift and reconcile the cluster to match this repository.
-
-⸻
-
-Notes
-	•	This repository should remain the single source of truth for in-cluster desired state
-	•	Avoid manual kubectl edit changes unless debugging temporarily
-	•	Permanent changes should always be committed back to Git
-
-⸻
-
-Related Repository
-	•	eks-infrastructure: provisions AWS/EKS and bootstraps ArgoCD
-
-إذا أردت، أرتب لك الآن **نسخة نهائية مختصرة وجاهزة للنسخ مباشرة** إلى `README.md` في كل repo، أو نسخة **أكثر احترافية مع قسم Architecture ورسوم ASCII**.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
