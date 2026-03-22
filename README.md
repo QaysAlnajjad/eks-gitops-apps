@@ -113,11 +113,12 @@ This keeps deployments declarative, traceable, and auditable.
 apps/aws-load-balancer-controller/
 
 This application is deployed through ArgoCD from the external AWS EKS Helm charts repository and uses local values for:
-	•	cluster name
-	•	service account
-	•	IRSA role annotation
-	•	region
-	•	VPC ID
+
+  * cluster name
+  * service account
+  * IRSA role annotation
+  * region
+  * VPC ID
 
 ⸻
 
@@ -126,11 +127,12 @@ This application is deployed through ArgoCD from the external AWS EKS Helm chart
 apps/sample-app/
 
 A demo workload used as a simple application target, with:
-	•	namespace manifest
-	•	deployment
-	•	service
-	•	ingress
-	•	HPA
+
+  *	namespace manifest
+  *	deployment
+  *	service
+  *	ingress
+  *	HPA
 
 This gives a separate example application distinct from the Flask application.
 
@@ -141,11 +143,12 @@ This gives a separate example application distinct from the Flask application.
 apps/flask-app/
 
 The Flask application is deployed from manifests stored in this repository. The directory includes:
-	•	deployment
-	•	service for user traffic
-	•	separate metrics service
-	•	ingress
-	•	ArgoCD application definition
+
+  *	deployment
+  *	service for user traffic
+  *	separate metrics service
+  *	ingress
+  *	ArgoCD application definition
 
 This separation allows user HTTP traffic and Prometheus metrics scraping to be handled independently.
 
@@ -159,7 +162,7 @@ This application installs the monitoring stack using the kube-prometheus-stack H
 
 The chart values are stored locally in:
 
-apps/monitoring-chart/values.yaml
+  * apps/monitoring-chart/values.yaml
 
 This is the base monitoring platform layer.
 
@@ -170,14 +173,16 @@ This is the base monitoring platform layer.
 apps/monitoring-resources/
 
 This directory contains monitoring objects that sit on top of the monitoring chart, such as:
-	•	PrometheusRule
-	•	AlertmanagerConfig
-	•	ServiceMonitor
-	•	dashboards
+
+  *	PrometheusRule
+  *	AlertmanagerConfig
+  *	ServiceMonitor
+  *	dashboards
 
 This split is intentional:
-	•	monitoring-chart installs the platform
-	•	monitoring-resources customizes what that platform monitors and how it alerts
+
+  *	monitoring-chart installs the platform
+  *	monitoring-resources customizes what that platform monitors and how it alerts
 
 ⸻
 
