@@ -106,55 +106,95 @@ This keeps deployments declarative, traceable, and auditable.
 
 ---
 
-## What is managed here
+## Application Layout
 
-1. Platform applications in apps/
+### 1. AWS Load Balancer Controller
 
-The apps/ directory contains ArgoCD-managed application definitions and workload manifests for:
+apps/aws-load-balancer-controller/
 
-  * AWS Load Balancer Controller
+This application is deployed through ArgoCD from the external AWS EKS Helm charts repository and uses local values for:
+	•	cluster name
+	•	service account
+	•	IRSA role annotation
+	•	region
+	•	VPC ID
 
-  * Flask application
+⸻
 
-  * Monitoring stack
+### 2. Sample App
 
-  * Sample application
+apps/sample-app/
 
-The apps/kustomization.yaml acts as the aggregation point for the application layer.
+A demo workload used as a simple application target, with:
+	•	namespace manifest
+	•	deployment
+	•	service
+	•	ingress
+	•	HPA
 
-2. Monitoring resources in monitoring/
+This gives a separate example application distinct from the Flask application.
 
-This directory holds monitoring-related Kubernetes resources separate from the core application definitions.
+⸻
 
-It includes:
+### 3. Flask App
 
-  * alerts/ for alerting resources
+apps/flask-app/
 
-  * dashboards/ for Grafana dashboard definitions
+The Flask application is deployed from manifests stored in this repository. The directory includes:
+	•	deployment
+	•	service for user traffic
+	•	separate metrics service
+	•	ingress
+	•	ArgoCD application definition
 
-  * servicemonitors/ for Prometheus discovery of application metrics
+This separation allows user HTTP traffic and Prometheus metrics scraping to be handled independently.
 
-  * namespace.yaml for monitoring namespace resources
+⸻
 
-  * a local README.md documenting the monitoring architecture
+### 4. Monitoring Chart
 
-3. Bootstrap resources in bootstrap/
+apps/monitoring-chart/
 
-This directory contains manifests needed during the integration between EKS and GitOps, such as:
+This application installs the monitoring stack using the kube-prometheus-stack Helm chart through ArgoCD.
 
-  * ALB controller service account bootstrap
+The chart values are stored locally in:
 
-  * aws-auth-related bootstrap manifests
+apps/monitoring-chart/values.yaml
 
-4. RBAC resources in rbac/
+This is the base monitoring platform layer.
 
-This directory contains platform RBAC manifests such as:
+⸻
 
-  * application roles
+### 5. Monitoring Resources
 
-  * monitoring roles
+apps/monitoring-resources/
 
-  * role bindings
+This directory contains monitoring objects that sit on top of the monitoring chart, such as:
+	•	PrometheusRule
+	•	AlertmanagerConfig
+	•	ServiceMonitor
+	•	dashboards
+
+This split is intentional:
+	•	monitoring-chart installs the platform
+	•	monitoring-resources customizes what that platform monitors and how it alerts
+
+⸻
+
+### 6. Telegram Alerts
+
+apps/telegram-alerts/
+
+This application deploys the webhook service that receives Alertmanager webhooks and forwards them to Telegram.
+
+It is managed as its own ArgoCD application and includes:
+	•	deployment
+	•	service
+	•	secret
+	•	local kustomization
+
+This makes the alert delivery path explicit and independently deployable.
+
 
 ---
 
@@ -275,96 +315,6 @@ Qays Alnajjad
 
 
 
-
-
-Application Layout
-
-1. AWS Load Balancer Controller
-
-apps/aws-load-balancer-controller/
-
-This application is deployed through ArgoCD from the external AWS EKS Helm charts repository and uses local values for:
-	•	cluster name
-	•	service account
-	•	IRSA role annotation
-	•	region
-	•	VPC ID
-
-⸻
-
-2. Sample App
-
-apps/sample-app/
-
-A demo workload used as a simple application target, with:
-	•	namespace manifest
-	•	deployment
-	•	service
-	•	ingress
-	•	HPA
-
-This gives a separate example application distinct from the Flask application.
-
-⸻
-
-3. Flask App
-
-apps/flask-app/
-
-The Flask application is deployed from manifests stored in this repository. The directory includes:
-	•	deployment
-	•	service for user traffic
-	•	separate metrics service
-	•	ingress
-	•	ArgoCD application definition
-
-This separation allows user HTTP traffic and Prometheus metrics scraping to be handled independently.
-
-⸻
-
-4. Monitoring Chart
-
-apps/monitoring-chart/
-
-This application installs the monitoring stack using the kube-prometheus-stack Helm chart through ArgoCD.
-
-The chart values are stored locally in:
-
-apps/monitoring-chart/values.yaml
-
-This is the base monitoring platform layer.
-
-⸻
-
-5. Monitoring Resources
-
-apps/monitoring-resources/
-
-This directory contains monitoring objects that sit on top of the monitoring chart, such as:
-	•	PrometheusRule
-	•	AlertmanagerConfig
-	•	ServiceMonitor
-	•	dashboards
-
-This split is intentional:
-	•	monitoring-chart installs the platform
-	•	monitoring-resources customizes what that platform monitors and how it alerts
-
-⸻
-
-6. Telegram Alerts
-
-apps/telegram-alerts/
-
-This application deploys the webhook service that receives Alertmanager webhooks and forwards them to Telegram.
-
-It is managed as its own ArgoCD application and includes:
-	•	deployment
-	•	service
-	•	secret
-	•	local kustomization
-
-This makes the alert delivery path explicit and independently deployable.
 
 ⸻
 
