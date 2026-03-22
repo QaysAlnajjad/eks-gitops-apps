@@ -1,21 +1,37 @@
 # eks-gitops-apps
 
-GitOps repository for the Kubernetes platform and workloads running on the EKS cluster.
+GitOps repository for the Kubernetes application layer running on the EKS cluster.
 
-This repository is the declarative source of truth for platform applications, observability components, RBAC resources, and application workloads managed through ArgoCD.
+This repository is the declarative source of truth for in-cluster applications and supporting resources managed by ArgoCD after the infrastructure bootstrap is complete.
 
-## Purpose
+---
 
-This repository manages the Kubernetes layer after the EKS cluster has been provisioned.
+## Overview
 
-It contains:
+This repository manages the Kubernetes layer after `eks-infrastructure` has:
 
-- platform applications under `apps/`
-- bootstrap manifests for in-cluster access and service accounts
-- monitoring resources
-- RBAC manifests
+- provisioned the EKS cluster
+- installed ArgoCD
+- created the root ArgoCD application
 
-This repository is continuously synced to the cluster by ArgoCD.
+From that point onward, ArgoCD continuously reconciles the content of this repository to the cluster.
+
+---
+
+## What This Repository Owns
+
+This repository owns the **application and platform layer inside Kubernetes**, including:
+
+- AWS Load Balancer Controller application
+- sample application
+- flask application
+- monitoring chart deployment
+- monitoring resources layered on top of the monitoring stack
+- Telegram alert webhook application
+
+This repository is intentionally separate from the Terraform repository so infrastructure provisioning and Kubernetes desired state remain cleanly separated.
+
+---
 
 ## Repository Structure
 
@@ -197,47 +213,40 @@ If a resource is managed by ArgoCD, the Git state should be treated as authorita
 Qays Alnajjad
 
 
-## README مقترح لـ `eks-gitops-apps`
 
-هذا المستودع هو مصدر الحقيقة المعلن للحالة داخل الكلاستر بعد البوتستراب: `apps/kustomization.yaml` يجمع ستة تطبيقات/مسارات، و`monitoring-chart/app.yaml` ينشر `kube-prometheus-stack` من chart خارجي مع values محلية، و`telegram-alerts` يملك `app.yaml` و`deployment.yaml` و`service.yaml` و`secret.yaml` عبر `kustomization.yaml`.  [oai_citation:3‡GitHub](https://github.com/QaysAlnajjad/eks-gitops-apps/blob/main/apps/kustomization.yaml)
 
-كما أن `flask-app` يملك موارده الخاصة (`deployment.yaml` و`service.yaml` و`metrics-service.yaml` و`ingress.yaml`) و`sample-app` يملك `deployment.yaml` و`service.yaml` و`ingress.yaml` و`hpa.yaml` و`namespace.yaml`.  [oai_citation:4‡GitHub](https://github.com/QaysAlnajjad/eks-gitops-apps/tree/main/apps/flask-app)
 
-```md
-# eks-gitops-apps
 
-GitOps repository for the Kubernetes application layer running on the EKS cluster.
 
-This repository is the declarative source of truth for in-cluster applications and supporting resources managed by ArgoCD after the infrastructure bootstrap is complete.
 
----
 
-## Overview
 
-This repository manages the Kubernetes layer after `eks-infrastructure` has:
 
-- provisioned the EKS cluster
-- installed ArgoCD
-- created the root ArgoCD application
 
-From that point onward, ArgoCD continuously reconciles the content of this repository to the cluster.
 
----
 
-## What This Repository Owns
 
-This repository owns the **application and platform layer inside Kubernetes**, including:
 
-- AWS Load Balancer Controller application
-- sample application
-- Flask application
-- monitoring chart deployment
-- monitoring resources layered on top of the monitoring stack
-- Telegram alert webhook application
 
-This repository is intentionally separate from the Terraform repository so infrastructure provisioning and Kubernetes desired state remain cleanly separated.
 
----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Repository Structure
 
