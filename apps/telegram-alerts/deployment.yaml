@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: telegram-webhook
-          image: qaysalnajjad/telegram-webhook:v3
+          image: qaysalnajjad/eks-telegram-webhook:v2
           ports:
             - containerPort: 8080
           env:
