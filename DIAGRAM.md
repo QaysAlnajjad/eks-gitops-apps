@@ -1,7 +1,10 @@
 This repository focuses on the GitOps layer of the platform.
 For full infrastructure architecture, refer to the eks-infrastructure repository: 
+```text
  https://github.com/QaysAlnajjad/eks-infrastructure/blob/main/Project_Diagram.pdf
+```
 
+---
 
 
                 GitOps Repository
