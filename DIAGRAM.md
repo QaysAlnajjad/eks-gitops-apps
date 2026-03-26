@@ -6,7 +6,7 @@ For full infrastructure architecture, refer to the eks-infrastructure repository
 
 ---
 
-
+```text
                 GitOps Repository
         (eks-gitops-apps - manifests)
                         │
@@ -31,3 +31,5 @@ For full infrastructure architecture, refer to the eks-infrastructure repository
         │               │
         ▼               ▼
       ALB           Webhook (Telegram)
+```
+---
