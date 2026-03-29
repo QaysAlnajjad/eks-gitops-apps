@@ -5,7 +5,7 @@ on:
     paths:
       - '**/*.yaml'
       - '**/*.yml'
-      - '.github/workflows/k8s-manifest-checks.yml'
+      - '.github/workflows/k8s-manifest-checks.yشml'
   workflow_dispatch:
 
 permissions:
