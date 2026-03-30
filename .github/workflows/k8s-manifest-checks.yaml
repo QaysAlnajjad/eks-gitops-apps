@@ -5,7 +5,7 @@ on:
     paths:
       - '**/*.yaml'
       - '**/*.yml'
-      - '.github/workflows/k8s-manifest-checks.yشml'
+      - '.github/workflows/k8s-manifest-checks.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
@@ -34,20 +34,44 @@ jobs:
           chmod +x kubeconform
           sudo mv kubeconform /usr/local/bin/kubeconform
 
-      - name: Render all kustomizations
+      - name: Render kustomizations
         run: |
+          set -euo pipefail
           mkdir -p rendered
-          find . -type f \( -name 'kustomization.yaml' -o -name 'kustomization.yml' \) | while read -r file; do
+
+          mapfile -t kustomizations < <(find apps -type f -name 'kustomization.yaml' | sort)
+
+          if [ "${#kustomizations[@]}" -eq 0 ]; then
+            echo "No kustomization.yaml files found under apps/"
+            exit 1
+          fi
+
+          echo "Found kustomizations:"
+          printf ' - %s\n' "${kustomizations[@]}"
+
+          for file in "${kustomizations[@]}"; do
             dir="$(dirname "$file")"
             out="rendered/$(echo "$dir" | tr '/' '_').yaml"
             echo "Rendering $dir -> $out"
             kubectl kustomize "$dir" > "$out"
           done
 
+          echo "Rendered files:"
+          ls -lah rendered
+
       - name: Validate rendered manifests
         run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(rendered/*.yaml)
+
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No rendered manifests found after kustomize step."
+            exit 1
+          fi
+
           kubeconform \
             -summary \
             -strict \
             -ignore-missing-schemas \
-            rendered/*.yaml
+            "${files[@]}"
