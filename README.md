@@ -6,6 +6,23 @@ This repository is the declarative source of truth for in-cluster applications a
 
 ---
 
+## Table of Contents 
+
+- [Overview](#overview)
+- [What This Repository Owns](#what-this-repository-owns)
+- [Repository Structure](#repository-structure)
+- [GitOps Model](#gitops-model)
+- [Production Thinking: GitOps Validation & Safety](#production-thinking--gitops-validation--safety)
+- [Application Layout](#application-layout)
+- [Monitoring Architecture](#monitoring-architecture)
+- [Why the Monitoring Split Matters](#why-the-monitoring-split-matters)
+- [Deployment Flow](#deployment-flow)
+- [Operating Model](#operating-model)
+- [Notes](#notes)
+- [Relationship to the infrastructure repository](#relationship-to-the-infrastructure-repository)
+- [Author](#author)
+
+
 ## Overview
 
 This repository manages the Kubernetes layer after `eks-infrastructure` has:
