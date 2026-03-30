@@ -12,7 +12,7 @@ This repository is the declarative source of truth for in-cluster applications a
 - [What This Repository Owns](#what-this-repository-owns)
 - [Repository Structure](#repository-structure)
 - [GitOps Model](#gitops-model)
-- [Production Thinking: GitOps Validation & Safety](#production-thinking--gitops-validation--safety)
+- [Production Thinking: GitOps Validation & Safety](#production-thinking-gitops-validation--safety)
 - [Application Layout](#application-layout)
 - [Monitoring Architecture](#monitoring-architecture)
 - [Why the Monitoring Split Matters](#why-the-monitoring-split-matters)
