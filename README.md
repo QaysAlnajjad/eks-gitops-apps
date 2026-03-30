@@ -106,6 +106,108 @@ This keeps deployments declarative, traceable, and auditable.
 
 ---
 
+## Production Thinking: GitOps Validation & Safety
+
+This repository follows a GitOps approach where Kubernetes manifests are managed declaratively and applied via ArgoCD.
+
+To ensure safety and correctness before changes reach the cluster, a validation pipeline is implemented as part of CI.
+
+### Validation Workflow
+
+The CI pipeline performs two main steps:
+
+#### 1. Render (Kustomize)
+
+All `kustomization.yaml` files under the `apps/` directory are rendered using:
+
+```
+kubectl kustomize
+```
+
+This step converts overlays and compositions into fully expanded Kubernetes manifests.
+
+Each kustomization is rendered into a separate file under the `rendered/` directory.
+
+#### 2. Schema Validation (kubeconform)
+
+The rendered manifests are then validated using:
+
+```
+kubeconform
+```
+
+This ensures that:
+
+* manifests conform to Kubernetes API schemas
+* invalid configurations are caught early
+* broken deployments are prevented before reaching the cluster
+
+---
+
+### Why Rendering Before Validation Matters
+
+Validating raw manifests is not sufficient in a GitOps setup using Kustomize.
+
+Issues often appear only after rendering, such as:
+
+* incorrect resource composition
+* missing fields after overlays
+* invalid final manifests
+
+By validating the rendered output, the pipeline checks what will actually be applied to the cluster.
+
+---
+
+### Handling Custom Resources (CRDs)
+
+The validation step uses:
+
+```
+-ignore-missing-schemas
+```
+
+This is intentional.
+
+Many Kubernetes platforms rely on Custom Resource Definitions (CRDs), such as:
+
+* Prometheus Operator (`ServiceMonitor`, `Alertmanager`)
+* AWS Load Balancer Controller resources
+* other operator-managed resources
+
+These resources do not always have publicly available JSON schemas.
+
+Without this flag, validation would fail on valid CRDs simply because schemas are not available.
+
+---
+
+### Engineering Trade-off
+
+Using `-ignore-missing-schemas` reflects a real-world trade-off:
+
+* ✔️ strict validation for core Kubernetes resources
+* ✔️ flexibility for CRDs and platform extensions
+* ❌ not all resources can be fully schema-validated
+
+This approach ensures the pipeline remains:
+
+* practical
+* reliable
+* aligned with production environments
+
+---
+
+### Outcome
+
+This validation workflow ensures that:
+
+* only valid Kubernetes manifests are committed
+* configuration errors are detected early
+* GitOps deployments remain safe and predictable
+
+It mirrors production-grade platform practices where validation happens before reconciliation, not after failure.
+
+---
+
 ## Application Layout
 
 ### 1. AWS Load Balancer Controller
