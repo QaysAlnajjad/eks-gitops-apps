@@ -373,7 +373,8 @@ This keeps the Helm chart clean while preserving flexibility for project-specifi
   4. Each application in apps/ is reconciled into the cluster
   5. Ongoing changes are delivered by commit + sync
   6. Create required Kubernetes secrets manually (not stored in Git)
-
+     Sensitive data (e.g., API tokens) is not stored in this repository.
+     Required secrets must be created in the cluster before applications depending on them are deployed.
 ---
 
 ## Operating Model
