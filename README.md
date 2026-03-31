@@ -386,7 +386,7 @@ Make changes by editing Git manifests, then push.
 
 Secrets are not stored in this repository.
 
-Before deploying applications that depend on sensitive data (such as Telegram alerts), required Kubernetes secrets must be created manually using kubectl.
+Before deploying applications that depend on sensitive data (such as Telegram alerts), required Kubernetes secrets must be created manually in the cluster.
 
 Example:
 
@@ -395,7 +395,7 @@ kubectl create secret generic telegram-webhook-secret \
   --from-literal=TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN \
   --from-literal=TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
 
-This ensures that credentials are not exposed in Git while still allowing applications to consume them securely.
+These secrets are referenced by the application manifests but are intentionally excluded from Git to prevent credential exposure.
 
 ### Typical workflow
 
