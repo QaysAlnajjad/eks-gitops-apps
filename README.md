@@ -372,6 +372,7 @@ This keeps the Helm chart clean while preserving flexibility for project-specifi
   3. ArgoCD reads apps/kustomization.yaml
   4. Each application in apps/ is reconciled into the cluster
   5. Ongoing changes are delivered by commit + sync
+  6. Create required Kubernetes secrets manually (not stored in Git)
 
 ---
 
@@ -379,7 +380,22 @@ This keeps the Helm chart clean while preserving flexibility for project-specifi
 
 Make changes by editing Git manifests, then push.
 
-Typical workflow:
+### Secret Handling
+
+Secrets are not stored in this repository.
+
+Before deploying applications that depend on sensitive data (such as Telegram alerts), required Kubernetes secrets must be created manually using kubectl.
+
+Example:
+
+kubectl create secret generic telegram-webhook-secret \
+  -n monitoring \
+  --from-literal=TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN \
+  --from-literal=TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
+
+This ensures that credentials are not exposed in Git while still allowing applications to consume them securely.
+
+### Typical workflow
 
 git add .
 git commit -m "update application manifests"
