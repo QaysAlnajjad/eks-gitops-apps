@@ -8,4 +8,4 @@ serviceAccount:
 
 region: us-east-1
 
-vpcId: vpc-0ff3ebdb2418e50f0
+vpcId: vpc-0a8282d767880cb70
