@@ -4,8 +4,8 @@ serviceAccount:
   create: true
   name: aws-load-balancer-controller
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::127214183643:role/eks-alb-controller-role
+    eks.amazonaws.com/role-arn: arn:aws:iam::<AWS_ACCOUNT_ID>:role/eks-alb-controller-role
 
 region: us-east-1
 
-vpcId: vpc-0a8282d767880cb70
+vpcId: <VPC_ID>
