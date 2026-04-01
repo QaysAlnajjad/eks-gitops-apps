@@ -239,6 +239,29 @@ This application is deployed through ArgoCD from the external AWS EKS Helm chart
   * region
   * VPC ID
 
+Before syncing this application, update `apps/aws-load-balancer-controller/values.yaml` with environment-specific values from the infrastructure repository, including:
+
+- EKS cluster name
+- AWS region
+- VPC ID
+- IRSA role ARN / AWS account ID
+
+Example fields:
+
+```yaml
+clusterName: eks-cluster
+
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<AWS_ACCOUNT_ID>:role/eks-alb-controller-role
+
+region: us-east-1
+
+vpcId: <VPC_ID>
+```
+
 ---
 
 ### 2. Sample App
