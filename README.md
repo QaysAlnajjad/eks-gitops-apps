@@ -261,7 +261,7 @@ region: us-east-1
 
 vpcId: <VPC_ID>
 ```
-
+VPC_ID value must be obtained from the infrastructure repository (`eks-infrastructure`) after the cluster is created.
 ---
 
 ### 2. Sample App
